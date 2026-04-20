@@ -339,6 +339,17 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
+.chip{
+  padding:6px 13px;border-radius:16px;font-size:12px;font-weight:600;
+  border:1.5px solid var(--border);background:var(--smoke);color:var(--muted);
+  cursor:pointer;transition:all .15s;user-select:none;
+}
+.chip:hover{border-color:var(--gold);color:var(--gold);}
+.chip.sel{background:var(--navy);border-color:var(--navy);color:#fff;}
+
 </style>
 <style>
 :root{
@@ -802,19 +813,19 @@ tbody tr.row-ok td{background:#f8fdf9;}
           <div class="fld">
             <label>Sócio(s) Executor(es)</label>
             <div class="chips" id="chips-exec-soc" style="margin-top:4px">
-              <div class="chip" data-v="Marcelo">Marcelo</div>
-              <div class="chip" data-v="Murilo">Murilo</div>
-              <div class="chip" data-v="Renato">Renato</div>
-              <div class="chip" data-v="Luiz Fernando">Luiz Fernando</div>
-              <div class="chip" data-v="Paulo Renato">Paulo Renato</div>
+              <div class="chip" data-v="Marcelo" onclick="this.classList.toggle('sel')">Marcelo</div>
+              <div class="chip" data-v="Murilo" onclick="this.classList.toggle('sel')">Murilo</div>
+              <div class="chip" data-v="Renato" onclick="this.classList.toggle('sel')">Renato</div>
+              <div class="chip" data-v="Luiz Fernando" onclick="this.classList.toggle('sel')">Luiz Fernando</div>
+              <div class="chip" data-v="Paulo Renato" onclick="this.classList.toggle('sel')">Paulo Renato</div>
             </div>
           </div>
           <div class="fld">
             <label>Adv. Contratado (PJ)</label>
             <div class="chips" id="chips-exec-pj" style="margin-top:4px">
-              <div class="chip" data-v="PJ 1">PJ 1</div>
-              <div class="chip" data-v="PJ 2">PJ 2</div>
-              <div class="chip" data-v="PJ 3">PJ 3</div>
+              <div class="chip" data-v="PJ 1" onclick="this.classList.toggle('sel')">PJ 1</div>
+              <div class="chip" data-v="PJ 2" onclick="this.classList.toggle('sel')">PJ 2</div>
+              <div class="chip" data-v="PJ 3" onclick="this.classList.toggle('sel')">PJ 3</div>
             </div>
           </div>
           <div class="fld"><label>Status</label>
@@ -1667,16 +1678,7 @@ function getChipsProc(groupId){
 }
 
 function initChipsProc(){
-  // Event delegation — funciona para chips dentro de modais também
-  document.addEventListener('click', function(e){
-    const chip = e.target.closest('.chip');
-    if(!chip) return;
-    const pai = chip.parentElement;
-    if(!pai) return;
-    const grupos = ['chips-exec-soc','chips-exec-pj','chips-fech-cap','chips-fech-exec','chips-fech-pj'];
-    if(!grupos.includes(pai.id)) return;
-    chip.classList.toggle('sel');
-  });
+  // Não faz nada — os chips usam onclick direto no HTML
 }
 
 function atualizarProxFila(){
