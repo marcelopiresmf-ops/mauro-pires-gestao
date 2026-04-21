@@ -84,7 +84,7 @@ input:focus,select:focus{border-color:#b8892a;background:#fff;}
   <div class="brand">Mauro Pires <span>Advogados</span> · <span style="color:rgba(255,255,255,.6);font-size:14px">Administração</span></div>
   <div class="topbar-right">
     <span class="user-badge" id="user-badge"></span>
-    <a href="mp_login.html" class="btn-voltar">↩ Voltar</a>
+    <a href="index.html" class="btn-voltar">↩ Voltar</a>
   </div>
 </div>
 
@@ -553,7 +553,7 @@ window.onload=function(){
   const sess=JSON.parse(sessionStorage.getItem('mp_sessao')||'null');
   if(!sess||sess.perfil!=='admin'){
     alert('Acesso restrito ao Administrador.');
-    window.location.href='mp_login.html';
+    window.location.href='index.html';
     return;
   }
   $('user-badge').textContent=sess.nome;
