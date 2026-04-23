@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mauro Pires Advogados — Acesso</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0f1f3d;--gold:#b8892a;--goldl:#f9f0dc;
+  --ink:#1c1c1c;--muted:#7a7a7a;--border:#e8e0d0;
+  --smoke:#f8f6f0;--green:#1e5c3a;--red:#9b2020;
+}
+body{
+  font-family:'Outfit',system-ui,sans-serif;
+  min-height:100vh;
+  background: linear-gradient(135deg, #0a1628 0%, #1a3060 50%, #0f2040 100%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+body::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a843' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;
+}
+
+.card{
+  background:#fff;border-radius:20px;
+  box-shadow:0 32px 80px rgba(0,0,0,.35);
+  width:100%;max-width:420px;
+  padding:48px 40px;
+  position:relative;z-index:1;
+}
+
+.logo{text-align:center;margin-bottom:36px;}
+.logo-icon{
+  width:72px;height:72px;border-radius:16px;
+  background:linear-gradient(135deg,var(--navy),#1a3a6b);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+  box-shadow:0 8px 24px rgba(15,31,61,.3);
+}
+.logo-icon span{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;color:var(--gold);}
+.logo h1{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.logo p{font-size:12px;color:var(--muted);letter-spacing:.5px;}
+
+.divider{
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto 32px;width:60%;
+}
+
+.fld{margin-bottom:18px;}
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.fld input{
+  width:100%;padding:12px 16px;border:1.5px solid var(--border);
+  border-radius:10px;font-size:14px;font-family:'Outfit',sans-serif;
+  color:var(--ink);background:var(--smoke);
+  transition:border-color .2s,box-shadow .2s;outline:none;
+}
+.fld input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,137,42,.12);background:#fff;}
+
+.btn-login{
+  width:100%;padding:14px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--navy),#1a3a6b);
+  color:#fff;font-size:15px;font-weight:600;font-family:'Outfit',sans-serif;
+  cursor:pointer;transition:transform .15s,box-shadow .15s;
+  box-shadow:0 6px 20px rgba(15,31,61,.3);
+  margin-top:8px;
+}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(15,31,61,.4);}
+.btn-login:active{transform:translateY(0);}
+
+.erro{
+  display:none;margin-top:16px;padding:12px 16px;
+  border-radius:10px;background:#fdf0f0;border:1.5px solid #e8b4b4;
+  color:var(--red);font-size:13px;font-weight:500;text-align:center;
+}
+.erro.show{display:block;}
+
+.footer{
+  text-align:center;margin-top:28px;
+  font-size:11px;color:var(--muted);
+}
+.footer span{color:var(--gold);font-weight:600;}
+
+@media(max-width:480px){
+  .card{padding:36px 24px;margin:16px;}
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon"><span>MP</span></div>
+    <h1>Mauro Pires Advogados</h1>
+    <p>SISTEMA DE GESTÃO</p>
+  </div>
+  <div class="divider"></div>
+
+  <div class="fld">
+    <label>Usuário</label>
+    <input type="text" id="login" placeholder="seu.usuario" autocomplete="username"
+      onkeydown="if(event.key==='Enter') document.getElementById('senha').focus()">
+  </div>
+  <div class="fld">
+    <label>Senha</label>
+    <input type="password" id="senha" placeholder="••••••••" autocomplete="current-password"
+      onkeydown="if(event.key==='Enter') entrar()">
+  </div>
+
+  <button class="btn-login" onclick="entrar()">Entrar no Sistema</button>
+  <div class="erro" id="erro">Usuário ou senha incorretos. Tente novamente.</div>
+
+  <div class="footer">
+    Goiânia/GO · 2026 · <span>Uso exclusivo interno</span>
+  </div>
+</div>
+
+<script>
+const USUARIOS = [{"login":"admin","senha":"Admin@2026","perfil":"admin","nome":"Administrador"},{"login":"marcelo","senha":"Marcelo@2026","perfil":"socio","nome":"Marcelo"},{"login":"murilo","senha":"Murilo@2026","perfil":"socio","nome":"Murilo"},{"login":"renato","senha":"Renato@2026","perfil":"socio","nome":"Renato"},{"login":"luizf","senha":"Luizf@2026","perfil":"socio","nome":"Luiz Fernando"},{"login":"paulor","senha":"Paulor@2026","perfil":"socio","nome":"Paulo Renato"},{"login":"coordenador","senha":"Coord@2026","perfil":"coordenador","nome":"Coordenador"},{"login":"pj1","senha":"PJ1@2026","perfil":"pj","nome":"Advogado PJ 1"},{"login":"pj2","senha":"PJ2@2026","perfil":"pj","nome":"Advogado PJ 2"},{"login":"pj3","senha":"PJ3@2026","perfil":"pj","nome":"Advogado PJ 3"},{"login":"gestor","senha":"Gestor@2026","perfil":"financeiro","nome":"Gestor Financeiro"}];
+
+function entrar() {
+  var login  = document.getElementById('login').value.trim().toLowerCase();
+  var senha  = document.getElementById('senha').value;
+  var erro   = document.getElementById('erro');
+  erro.classList.remove('show');
+
+  var u = USUARIOS.find(function(x){ return x.login === login && x.senha === senha; });
+  if (!u) {
+    erro.classList.add('show');
+    document.getElementById('senha').value = '';
+    document.getElementById('senha').focus();
+    return;
+  }
+
+  var sessao = {
+    login:   u.login,
+    nome:    u.nome,
+    perfil:  u.perfil,
+    expira:  new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString() // 8 horas
+  };
+
+  try { sessionStorage.setItem('mp_sessao', JSON.stringify(sessao)); } catch(e){}
+  try { localStorage.setItem('mp_sessao',   JSON.stringify(sessao)); } catch(e){}
+
+  window.location.href = 'Gestao.html';
+}
+
+// Foco automático no campo usuário
+document.getElementById('login').focus();
+</script>
+</body>
+</html>
