@@ -364,7 +364,7 @@ tbody tr.row-pago td{background:#f8fdf9;}
 
 /* Balão principal */
 #tut-card {
-  position:fixed; z-index:9003;
+  position:fixed; z-index:9999 !important;
   width:320px;
   background:#ffffff;
   border-radius:16px;
@@ -1521,6 +1521,7 @@ tbody tr.row-pago td{background:#f8fdf9;}
 
 <script>
 
+
 // ═══ TUTORIAL GUIADO PROFISSIONAL ═══════════════════════════════
 var _tAtivo=false, _tIdx=0, _tPassos=[], _tTimer=null, _tAnimFrame=null;
 
@@ -1669,6 +1670,7 @@ function _tRender(p){
   // Posicionar
   card.classList.remove('visivel');
   frame.classList.remove('visivel');
+  card.style.zIndex='9999';
 
   if(p.sel){
     var el=null;
@@ -1699,10 +1701,11 @@ function _tRender(p){
   // Centro
   _tDesenharMask(0,0,0,0);
   frame.style.display='none';
+  var bw=Math.min(320,window.innerWidth-20);
   card.className='visivel seta-centro';
-  var bw=320,bh=280;
+  card.style.width=bw+'px';
   card.style.left=((window.innerWidth-bw)/2)+'px';
-  card.style.top=((window.innerHeight-bh)/2)+'px';
+  card.style.top=Math.max(60,(window.innerHeight-280)/2)+'px';
 }
 
 function _tDesenharMask(x,y,w,h){
@@ -1724,39 +1727,45 @@ function _tDesenharMask(x,y,w,h){
 }
 
 function _tPosCard(card,r,dir){
-  var bw=320,pad=14;
-  var vw=window.innerWidth,vh=window.innerHeight;
+  var bw=320, pad=14;
+  var vw=window.innerWidth, vh=window.innerHeight;
+  // Mobile: se tela menor que 400px, centralizar sempre
+  if(vw < 440) {
+    card.className='visivel seta-centro';
+    card.style.left = Math.max(10, (vw-Math.min(bw,vw-20))/2)+'px';
+    card.style.top = Math.max(60, (vh-280)/2)+'px';
+    card.style.width = Math.min(bw, vw-20)+'px';
+    return;
+  }
   var left,top,seta;
-
   if(dir==='b'||dir==='baixo'){
-    // Acima do elemento
     left=Math.max(10,Math.min(r.left,vw-bw-10));
     top=r.top-280-pad;
     seta='seta-baixo';
     if(top<10){top=r.bottom+pad;seta='seta-cima';}
   } else if(dir==='c'||dir==='cima'){
-    // Abaixo do elemento
     left=Math.max(10,Math.min(r.left,vw-bw-10));
     top=r.bottom+pad;
     seta='seta-cima';
     if(top+260>vh-10){top=r.top-280-pad;seta='seta-baixo';}
   } else if(dir==='d'||dir==='dir'){
-    // À direita
     left=r.right+pad;
     top=Math.max(10,r.top-20);
     seta='seta-esq';
     if(left+bw>vw-10){left=r.left-bw-pad;seta='seta-dir';}
   } else {
-    // À esquerda
     left=r.left-bw-pad;
     top=Math.max(10,r.top-20);
     seta='seta-dir';
     if(left<10){left=r.right+pad;seta='seta-esq';}
   }
-
+  // Garantir sempre visível
+  left=Math.max(10,Math.min(left,vw-bw-10));
+  top=Math.max(60,Math.min(top,vh-300));
   card.className='visivel '+seta;
-  card.style.left=Math.max(10,left)+'px';
-  card.style.top=Math.max(10,Math.min(top,vh-300))+'px';
+  card.style.left=left+'px';
+  card.style.top=top+'px';
+  card.style.width=Math.min(bw,vw-20)+'px';
 }
 
 function tutProx(){if(_tIdx<_tPassos.length-1){_tIdx++;_tMostrar();}else{tutEncerrar();}}
@@ -4375,6 +4384,7 @@ window.onload=function(){
   atualizarProxFila();
   setInterval(verificarAlertas,300000);
 };
+
 
 
 
