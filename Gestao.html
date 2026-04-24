@@ -237,73 +237,309 @@ tbody tr.row-pago td{background:#f8fdf9;}
 .vencido{border-left:3px solid var(--red);background:#fff8f8;}
 .vencido{background:#fff8f8;border-color:#f5c6c6;}
 
-/* ═══ TUTORIAL ═══════════════════════════════════════════════════ */
-#tut-overlay{
-  display:none;position:fixed;inset:0;z-index:9999;
-  background:rgba(10,20,50,.75);backdrop-filter:blur(4px);
-  align-items:center;justify-content:center;
-}
-#tut-overlay.show{display:flex;}
-#tut-box{
-  background:#fff;border-radius:20px;width:100%;max-width:520px;
-  box-shadow:0 32px 80px rgba(0,0,0,.4);
-  overflow:hidden;position:relative;
-  animation:tutIn .35s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes tutIn{from{opacity:0;transform:scale(.9) translateY(20px);}to{opacity:1;transform:none;}}
-#tut-header{
-  background:linear-gradient(135deg,#0f1f3d,#1a3a6b);
-  padding:24px 28px 20px;position:relative;
-}
-#tut-header h2{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;font-weight:700;margin-bottom:4px;}
-#tut-header p{font-size:12px;color:rgba(255,255,255,.6);}
-#tut-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;
-  color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;
-  display:flex;align-items:center;justify-content:center;}
-#tut-close:hover{background:rgba(255,255,255,.2);}
-#tut-progress{height:3px;background:rgba(255,255,255,.15);}
-#tut-progress-bar{height:100%;background:#b8892a;transition:width .4s ease;}
-#tut-icon{
-  width:80px;height:80px;border-radius:16px;margin:0 auto 16px;
-  display:flex;align-items:center;justify-content:center;font-size:40px;
-  background:linear-gradient(135deg,#f9f0dc,#fff);
-  box-shadow:0 4px 16px rgba(184,137,42,.2);
-}
-#tut-body{padding:28px;text-align:center;}
-#tut-body h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:#0f1f3d;font-weight:700;margin-bottom:10px;}
-#tut-body p{font-size:14px;color:#444;line-height:1.7;margin-bottom:0;}
-#tut-body ul{text-align:left;margin:12px 0 0;padding:0;list-style:none;}
-#tut-body ul li{font-size:13px;color:#444;padding:6px 0 6px 24px;position:relative;border-bottom:1px solid #f0ebe2;}
-#tut-body ul li:last-child{border-bottom:none;}
-#tut-body ul li::before{content:'→';position:absolute;left:0;color:#b8892a;font-weight:700;}
-#tut-footer{
-  padding:16px 28px 24px;display:flex;align-items:center;justify-content:space-between;
-  border-top:1px solid #f0ebe2;
-}
-#tut-steps{font-size:12px;color:#999;font-weight:600;}
-.tut-dots{display:flex;gap:6px;justify-content:center;margin-bottom:4px;}
-.tut-dot{width:8px;height:8px;border-radius:50%;background:#e0d8cc;transition:all .3s;}
-.tut-dot.active{background:#b8892a;width:20px;border-radius:4px;}
-#tut-btn-prev{padding:8px 18px;border:1.5px solid #e0d8cc;border-radius:8px;background:#fff;
-  color:#666;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
-#tut-btn-prev:hover{border-color:#b8892a;color:#b8892a;}
-#tut-btn-prev:disabled{opacity:.3;cursor:default;}
-#tut-btn-next{padding:8px 22px;border:none;border-radius:8px;
-  background:linear-gradient(135deg,#0f1f3d,#1a3a6b);
-  color:#fff;font-size:13px;font-weight:600;cursor:pointer;
-  box-shadow:0 4px 12px rgba(15,31,61,.25);transition:all .2s;}
-#tut-btn-next:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(15,31,61,.35);}
-/* Botão de ajuda */
-#btn-tutorial{
-  position:fixed;bottom:20px;right:20px;z-index:1000;
-  width:44px;height:44px;border-radius:50%;border:none;
-  background:linear-gradient(135deg,#0f1f3d,#1a3a6b);
-  color:#fff;font-size:18px;cursor:pointer;
-  box-shadow:0 4px 16px rgba(15,31,61,.4);
-  transition:transform .2s,box-shadow .2s;
-  display:flex;align-items:center;justify-content:center;
-}
+
 #btn-tutorial:hover{transform:scale(1.1);box-shadow:0 6px 22px rgba(15,31,61,.5);}
+
+
+/* ═══ TUTORIAL GUIADO ══════════════════════════════════════════ */
+#tut-backdrop {
+  display:none;position:fixed;inset:0;z-index:8000;
+  background:rgba(0,0,0,.55);pointer-events:none;
+}
+#tut-backdrop.show { display:block; }
+
+/* Recorte do elemento destacado */
+#tut-highlight {
+  position:fixed;z-index:8001;
+  border-radius:8px;
+  box-shadow:0 0 0 4000px rgba(0,0,0,.55);
+  pointer-events:none;
+  transition:all .4s cubic-bezier(.4,0,.2,1);
+  border:2px solid #b8892a;
+}
+
+/* Balão de explicação */
+#tut-balloon {
+  display:none;position:fixed;z-index:8002;
+  background:#fff;border-radius:14px;
+  box-shadow:0 12px 40px rgba(0,0,0,.3);
+  width:300px;padding:0;
+  animation:balloonIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+#tut-balloon.show { display:block; }
+@keyframes balloonIn {
+  from{opacity:0;transform:scale(.85) translateY(10px);}
+  to{opacity:1;transform:none;}
+}
+#tut-balloon::before {
+  content:'';position:absolute;width:12px;height:12px;
+  background:#fff;transform:rotate(45deg);
+  border:2px solid #b8892a;
+}
+#tut-balloon.arrow-top::before    { top:-7px;left:24px;border-bottom:none;border-right:none; }
+#tut-balloon.arrow-bottom::before { bottom:-7px;left:24px;border-top:none;border-left:none; }
+#tut-balloon.arrow-left::before   { left:-7px;top:20px;border-right:none;border-bottom:none; }
+#tut-balloon.arrow-right::before  { right:-7px;top:20px;border-left:none;border-top:none; }
+
+#tut-balloon-hd {
+  background:linear-gradient(135deg,#0f1f3d,#1a3a6b);
+  padding:12px 16px;border-radius:14px 14px 0 0;
+  display:flex;align-items:center;gap:8px;
+}
+#tut-balloon-hd span { font-size:18px; }
+#tut-balloon-hd h4 { font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:700;color:#fff;margin:0; }
+#tut-balloon-body { padding:12px 16px; }
+#tut-balloon-body p { font-size:13px;color:#333;line-height:1.6;margin:0 0 8px; }
+#tut-balloon-body ul { margin:0;padding:0;list-style:none; }
+#tut-balloon-body ul li { font-size:12px;color:#555;padding:3px 0 3px 16px;position:relative; }
+#tut-balloon-body ul li::before { content:'→';position:absolute;left:0;color:#b8892a;font-weight:700; }
+#tut-balloon-ft {
+  padding:10px 16px;border-top:1px solid #f0ebe2;
+  display:flex;align-items:center;justify-content:space-between;
+}
+#tut-balloon-ft .tut-counter { font-size:11px;color:#999;font-weight:600; }
+#tut-balloon-ft .tut-nav { display:flex;gap:6px; }
+#tut-balloon-ft button {
+  padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .15s;
+}
+#tut-btn-anterior { background:#fff;border:1.5px solid #e0d8cc;color:#666; }
+#tut-btn-anterior:hover { border-color:#b8892a;color:#b8892a; }
+#tut-btn-anterior:disabled { opacity:.3;cursor:default; }
+#tut-btn-proximo {
+  background:linear-gradient(135deg,#0f1f3d,#1a3a6b);
+  border:none;color:#fff;
+  box-shadow:0 3px 10px rgba(15,31,61,.25);
+}
+#tut-btn-proximo:hover { transform:translateY(-1px);box-shadow:0 5px 14px rgba(15,31,61,.35); }
+#tut-btn-pular {
+  background:none;border:none;color:#999;font-size:11px;cursor:pointer;text-decoration:underline;
+}
+#tut-btn-pular:hover { color:#666; }
+#tut-progbar {
+  height:3px;background:#f0ebe2;border-radius:0 0 14px 14px;overflow:hidden;
+}
+#tut-progbar-fill { height:100%;background:#b8892a;transition:width .4s ease; }
+
+/* Botão de ajuda fixo */
+#btn-tut-ajuda {
+  position:fixed;bottom:20px;right:20px;z-index:7999;
+  width:46px;height:46px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,#0f1f3d,#1a3a6b);
+  color:#fff;font-size:20px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(15,31,61,.4);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s,box-shadow .2s;
+}
+#btn-tut-ajuda:hover { transform:scale(1.1);box-shadow:0 6px 22px rgba(15,31,61,.5); }
+
+
+/* ═══ TUTORIAL GUIADO PROFISSIONAL ════════════════════════════ */
+#tut-overlay {
+  display:none; position:fixed; inset:0; z-index:9000;
+  pointer-events:none;
+}
+#tut-overlay.ativo { display:block; pointer-events:all; }
+
+/* Máscara SVG com recorte iluminado */
+#tut-mask {
+  position:fixed; inset:0; z-index:9001;
+  pointer-events:none;
+  transition:all .4s ease;
+}
+#tut-mask svg {
+  position:absolute; inset:0; width:100%; height:100%;
+}
+
+/* Borda dourada ao redor do elemento */
+#tut-frame {
+  position:fixed; z-index:9002; pointer-events:none;
+  border:2.5px solid #d4a843;
+  border-radius:8px;
+  box-shadow:0 0 0 2px rgba(212,168,67,.3), 0 0 20px rgba(212,168,67,.4);
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  opacity:0;
+}
+#tut-frame.visivel { opacity:1; }
+
+/* Balão principal */
+#tut-card {
+  position:fixed; z-index:9003;
+  width:320px;
+  background:#ffffff;
+  border-radius:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.06);
+  overflow:hidden;
+  transition:all .35s cubic-bezier(.34,1.4,.64,1);
+  opacity:0; transform:scale(.9) translateY(8px);
+  pointer-events:all;
+}
+#tut-card.visivel {
+  opacity:1; transform:scale(1) translateY(0);
+}
+
+/* Seta do balão */
+#tut-card::before {
+  content:'';
+  position:absolute;
+  width:14px; height:14px;
+  background:#0f1f3d;
+  transform:rotate(45deg);
+  transition:all .3s ease;
+  z-index:1;
+}
+#tut-card.seta-cima::before    { top:-7px; left:28px; }
+#tut-card.seta-baixo::before   { bottom:-7px; left:28px; }
+#tut-card.seta-esq::before     { left:-7px; top:28px; }
+#tut-card.seta-dir::before     { right:-7px; top:28px; }
+#tut-card.seta-centro::before  { display:none; }
+
+/* Cabeçalho do balão */
+#tut-hd {
+  background:linear-gradient(135deg, #0f1f3d 0%, #1e3a6e 100%);
+  padding:16px 18px 14px;
+  position:relative;
+}
+#tut-hd-top {
+  display:flex; align-items:center; gap:10px; margin-bottom:6px;
+}
+#tut-emoji {
+  width:36px; height:36px; border-radius:10px;
+  background:rgba(212,168,67,.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; flex-shrink:0;
+}
+#tut-titulo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:700; color:#fff; margin:0;
+  line-height:1.2;
+}
+#tut-progresso-bar {
+  height:3px; background:rgba(255,255,255,.15);
+  border-radius:2px; overflow:hidden;
+}
+#tut-progresso-fill {
+  height:100%; background:#d4a843;
+  border-radius:2px;
+  transition:width .5s ease;
+}
+
+/* Corpo do balão */
+#tut-corpo {
+  padding:14px 18px 10px;
+}
+#tut-texto {
+  font-size:13px; color:#2d2d2d; line-height:1.65;
+  margin:0 0 10px;
+}
+#tut-lista {
+  margin:0; padding:0; list-style:none;
+}
+#tut-lista li {
+  font-size:12px; color:#555; padding:4px 0 4px 18px;
+  position:relative; border-bottom:1px solid #f5f0e8;
+  line-height:1.5;
+}
+#tut-lista li:last-child { border-bottom:none; }
+#tut-lista li::before {
+  content:'▸'; position:absolute; left:0;
+  color:#d4a843; font-size:11px; top:5px;
+}
+
+/* Rodapé do balão */
+#tut-rodape {
+  padding:10px 18px 14px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:#faf8f4;
+  border-top:1px solid #ede8dc;
+}
+#tut-contador {
+  font-size:11px; color:#999; font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+}
+#tut-dots {
+  display:flex; gap:5px; align-items:center;
+}
+#tut-dots .dot {
+  width:6px; height:6px; border-radius:50%;
+  background:#ddd; transition:all .3s;
+}
+#tut-dots .dot.ativo {
+  background:#d4a843; width:16px; border-radius:3px;
+}
+#tut-dots .dot.passado { background:#b8892a; }
+#tut-nav {
+  display:flex; gap:6px; align-items:center;
+}
+#tut-btn-ant {
+  width:32px; height:32px; border-radius:50%;
+  border:1.5px solid #ddd; background:#fff;
+  color:#666; font-size:13px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .2s;
+}
+#tut-btn-ant:hover:not(:disabled) { border-color:#d4a843; color:#d4a843; }
+#tut-btn-ant:disabled { opacity:.3; cursor:default; }
+#tut-btn-prox {
+  height:32px; padding:0 14px; border-radius:8px;
+  border:none; cursor:pointer; font-size:12px; font-weight:700;
+  background:linear-gradient(135deg,#0f1f3d,#1e3a6e);
+  color:#fff; letter-spacing:.3px;
+  transition:all .2s;
+  box-shadow:0 3px 10px rgba(15,31,61,.25);
+}
+#tut-btn-prox:hover { transform:translateY(-1px); box-shadow:0 5px 15px rgba(15,31,61,.35); }
+
+/* Botão pular */
+#tut-btn-pular {
+  position:fixed; z-index:9004;
+  top:18px; right:18px;
+  background:rgba(255,255,255,.12); backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.8); font-size:12px; font-weight:600;
+  padding:7px 16px; border-radius:20px; cursor:pointer;
+  pointer-events:all; transition:all .2s;
+  display:none;
+}
+#tut-btn-pular.visivel { display:block; }
+#tut-btn-pular:hover { background:rgba(255,255,255,.2); color:#fff; }
+
+/* Número do passo flutuante */
+#tut-step-badge {
+  position:fixed; z-index:9004;
+  top:18px; left:50%; transform:translateX(-50%);
+  background:rgba(15,31,61,.9); backdrop-filter:blur(8px);
+  border:1px solid rgba(212,168,67,.4);
+  color:#fff; font-size:12px; font-weight:600;
+  padding:6px 18px; border-radius:20px;
+  pointer-events:none; display:none;
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:.5px;
+}
+#tut-step-badge.visivel { display:block; }
+
+/* Botão de ajuda fixo */
+#btn-ajuda-tut {
+  position:fixed; bottom:24px; right:24px; z-index:8999;
+  width:48px; height:48px; border-radius:50%; border:none;
+  background:linear-gradient(135deg,#0f1f3d,#1e3a6e);
+  color:#fff; font-size:22px; cursor:pointer;
+  box-shadow:0 4px 20px rgba(15,31,61,.5);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .25s, box-shadow .25s;
+}
+#btn-ajuda-tut:hover { transform:scale(1.12) rotate(-5deg); box-shadow:0 8px 28px rgba(15,31,61,.6); }
+#btn-ajuda-tut::after {
+  content:'Ajuda';
+  position:absolute; bottom:54px; right:0;
+  background:#0f1f3d; color:#fff;
+  font-size:11px; font-weight:600;
+  padding:4px 10px; border-radius:6px;
+  white-space:nowrap; opacity:0;
+  transition:opacity .2s;
+  pointer-events:none;
+}
+#btn-ajuda-tut:hover::after { opacity:1; }
 
 </style>
 </head>
@@ -1224,34 +1460,332 @@ tbody tr.row-pago td{background:#f8fdf9;}
 
 <div id="toast"></div>
 
-<!-- TUTORIAL MODAL -->
+
+
+
+<div id="tut-backdrop"></div>
+<div id="tut-highlight"></div>
+<div id="tut-balloon">
+  <div id="tut-balloon-hd">
+    <span id="tut-icon-b">📋</span>
+    <h4 id="tut-titulo-b">Tutorial</h4>
+  </div>
+  <div id="tut-balloon-body">
+    <p id="tut-texto-b"></p>
+    <ul id="tut-lista-b"></ul>
+  </div>
+  <div id="tut-balloon-ft">
+    <div class="tut-counter" id="tut-counter-b"></div>
+    <button id="tut-btn-pular" onclick="tutPular()">Pular tutorial</button>
+    <div class="tut-nav">
+      <button id="tut-btn-anterior" onclick="tutAnterior()">← Ant.</button>
+      <button id="tut-btn-proximo" onclick="tutProximo()">Próximo →</button>
+    </div>
+  </div>
+  <div id="tut-progbar"><div id="tut-progbar-fill"></div></div>
+</div>
+<button id="btn-tut-ajuda" onclick="iniciarTutorial()" title="Tutorial do sistema">❓</button>
+
+
+<!-- TUTORIAL GUIADO -->
 <div id="tut-overlay">
-  <div id="tut-box">
-    <div id="tut-header">
-      <h2>📚 Tutorial do Sistema</h2>
-      <p>Mauro Pires Advogados — Guia de uso</p>
-      <button id="tut-close" onclick="fecharTutorial()">✕</button>
-      <div id="tut-progress"><div id="tut-progress-bar" style="width:0%"></div></div>
+  <canvas id="tut-mask-canvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:9001;pointer-events:none;"></canvas>
+</div>
+<div id="tut-frame"></div>
+<div id="tut-card">
+  <div id="tut-hd">
+    <div id="tut-hd-top">
+      <div id="tut-emoji">📋</div>
+      <h3 id="tut-titulo">Tutorial</h3>
     </div>
-    <div id="tut-body">
-      <div id="tut-icon" style="width:80px;height:80px;border-radius:16px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(135deg,#f9f0dc,#fff);box-shadow:0 4px 16px rgba(184,137,42,.2)"></div>
-      <h3 id="tut-titulo"></h3>
-      <p id="tut-texto"></p>
-      <ul id="tut-lista"></ul>
+    <div id="tut-progresso-bar">
+      <div id="tut-progresso-fill" style="width:0%"></div>
     </div>
-    <div class="tut-dots" id="tut-dots"></div>
-    <div id="tut-footer">
-      <button id="tut-btn-prev" onclick="tutPrev()">← Anterior</button>
-      <span id="tut-steps"></span>
-      <button id="tut-btn-next" onclick="tutNext()">Próximo →</button>
+  </div>
+  <div id="tut-corpo">
+    <p id="tut-texto"></p>
+    <ul id="tut-lista"></ul>
+  </div>
+  <div id="tut-rodape">
+    <span id="tut-contador"></span>
+    <div id="tut-dots"></div>
+    <div id="tut-nav">
+      <button id="tut-btn-ant" onclick="tutAnt()" title="Anterior">‹</button>
+      <button id="tut-btn-prox" onclick="tutProx()">Próximo →</button>
     </div>
   </div>
 </div>
-
-<!-- BOTÃO DE AJUDA FIXO -->
-<button id="btn-tutorial" onclick="abrirTutorial()" title="Abrir tutorial">❓</button>
+<button id="tut-btn-pular" onclick="tutEncerrar()">✕ Pular tutorial</button>
+<div id="tut-step-badge"></div>
+<button id="btn-ajuda-tut" onclick="tutIniciar()" title="Tutorial do sistema">❓</button>
 
 <script>
+
+// ═══ TUTORIAL GUIADO PROFISSIONAL ═══════════════════════════════
+var _tAtivo=false, _tIdx=0, _tPassos=[], _tTimer=null, _tAnimFrame=null;
+
+function _tPassosPerfil(perfil){
+  var isAdmin=perfil==='admin';
+  var isSocio=perfil==='socio'||isAdmin;
+  var isCoord=perfil==='coordenador'||isAdmin;
+  var isPJ   =perfil==='pj'||isAdmin;
+  var isFin  =perfil==='financeiro'||isAdmin;
+  var pp=[];
+
+  function add(s,dir,em,ti,tx,li,fn){pp.push({sel:s,dir:dir,em:em,ti:ti,tx:tx,li:li||[],fn:fn||null});}
+
+  // Boas-vindas
+  add(null,'c','👋','Bem-vindo!',
+    'Este tutorial vai te guiar pelo sistema passo a passo. Cada balão explica uma função. Use os botões para navegar.',
+    ['Clique em Próximo para avançar','Clique em ✕ para pular','O botão ❓ reabre quando quiser'],
+    function(){goPage('pg-escritorio');}
+  );
+
+  // ── TOPBAR ──
+  add('.topbar .brand',        'b','🏢','Mauro Pires Advogados','Logotipo do escritório. Você está no sistema de gestão integrado.',['Versão web — acesse de qualquer dispositivo'],null);
+  add('.nt:nth-child(1)',      'b','🏢','Aba Escritório','Painel financeiro. Receitas, despesas, KPIs e alertas de vencimento.',['Seu ponto de partida diário'],function(){goPage('pg-escritorio');});
+  add('.nt:nth-child(2)',      'b','⚖️','Aba Processos','Central de gestão processual. Todos os casos do escritório.',['Clique em qualquer processo para abrir o dossiê'],function(){goPage('pg-processos');});
+  add('.nt:nth-child(3)',      'b','📊','Aba Fechamento','Distribuição de honorários por período.',['Veja quanto cada sócio e PJ tem a receber'],function(){goPage('pg-fechamento');});
+  add('.nt:nth-child(4)',      'b','🗄️','Aba Backup','Exportação e importação de dados. Faça backup toda semana.',['Um arquivo JSON com tudo do sistema'],function(){goPage('pg-backup');});
+
+  // ── ESCRITÓRIO ──
+  if(isFin||isSocio){
+    add('#kpi-rec',            'b','💰','Receitas do Mês','Total de entradas no período selecionado: honorários, retainers e outros.',['Clique no período para mudar o mês'],function(){goPage('pg-escritorio');});
+    add('#kpi-desp',           'b','💸','Despesas do Mês','Total de despesas lançadas. Inclui todos os centros de custo.',['Acompanhe para evitar surpresas no fluxo'],function(){goPage('pg-escritorio');});
+    add('#kpi-res',            'b','📈','Resultado','Receitas menos despesas. Verde = superávit. Vermelho = déficit.',['Base para decisões de gestão'],function(){goPage('pg-escritorio');});
+    add('#kpi-alert',          'b','⚠️','Alertas','Vencimentos nos próximos 7 dias. Clique para ver a lista.',['Resolva antes que vire inadimplência'],function(){goPage('pg-escritorio');});
+    add('#esc-comp',           'b','📅','Filtro de Período','Selecione o mês para filtrar todos os dados do painel.',['Padrão: mês atual'],function(){goPage('pg-escritorio');});
+    add('#tbody-entradas',     'c','💰','Tabela de Entradas','Lista de receitas do período. Edite ou exclua clicando nos ícones.',['Tipos: Honorário, Retainer, Sucumbência, Consultoria'],function(){goPage('pg-escritorio');});
+    add('#tbody-despesas-esc', 'c','💸','Tabela de Despesas','Lista de despesas do período com centro de custo e status.',['Status: Pendente ou Pago'],function(){goPage('pg-escritorio');});
+  }
+
+  // ── HONORÁRIOS ──
+  if(isSocio||isFin){
+    add('.nt:nth-child(1)',    'b','⚖️','Aba Honorários','Lançamento de casos e acompanhamento da distribuição.',['Sub-aba Lançar: novo caso','Sub-aba Casos: histórico'],function(){goPage('pg-honorarios');});
+    add('#snt-lanc',           'b','📋','Lançar Caso','Formulário para registrar um novo caso com distribuição automática.',['Preencha todos os campos antes de salvar'],function(){goPage('pg-honorarios');if(typeof goSubHon==='function')goSubHon('lanc');});
+    add('#cc',                 'c','🎯','Chips — Captador','Quem captou o caso. Selecione apenas UM.',['Sócios, coordenador e PJs disponíveis','Se PJ/coord captou, marque o checkbox abaixo'],function(){goPage('pg-honorarios');if(typeof goSubHon==='function')goSubHon('lanc');});
+    add('#ce',                 'c','⚖️','Chips — Executor','Quem executou o caso. Pode ser mais de um profissional.',['Múltipla seleção','A % de execução é dividida entre os selecionados'],function(){goPage('pg-honorarios');if(typeof goSubHon==='function')goSubHon('lanc');});
+    add('#snt-casos',          'b','📁','Sub-aba Casos','Lista todos os casos lançados com resumo da distribuição.',['Filtre por período ou profissional','Clique para editar'],function(){goPage('pg-honorarios');if(typeof goSubHon==='function')goSubHon('casos');});
+  }
+
+  // ── PROCESSOS ──
+  add('.nt:nth-child(2)',      'b','⚖️','Aba Processos','Central de gestão processual. Todos os casos em um lugar.',['Busque por número, cliente ou área'],function(){goPage('pg-processos');});
+
+  // Abre modal para mostrar sub-abas
+  add('#m-proc .md-hd',        'b','📂','Dossiê do Processo','Cada processo tem 6 abas com todas as informações do caso.',['Dados, Prazos, Andamentos, Documentos, Comunicações, Checklist'],function(){goPage('pg-processos');if(typeof abrirModalProc==='function')abrirModalProc(null);});
+  add('#tab-dados',            'd','📋','Aba Dados','Partes, área, vara, captador e executor do processo.',['Número no formato CNJ','Captador: seleção única','Executor: múltipla seleção'],function(){if(typeof switchTab==='function')switchTab('dados');});
+  add('#chips-captou',         'c','🎯','Captador do Processo','Selecione quem captou. Seleção única.',['5 sócios + coordenador + 3 PJs','PJ/coord captando = 10% captador + 10% rateio sócios'],function(){if(typeof switchTab==='function')switchTab('dados');});
+  add('#chips-exec-soc',       'c','⚖️','Executor — Sócios','Sócios que executam o processo. Múltipla seleção.',['A % de execução é dividida entre os selecionados'],function(){if(typeof switchTab==='function')switchTab('dados');});
+  add('#chips-exec-pj',        'c','👨‍💼','Executor — PJs','Advogados PJ que executam. Múltipla seleção.',['Combinável com sócios executores'],function(){if(typeof switchTab==='function')switchTab('dados');});
+  add('#p-captou-pj',          'c','☑️','Flag Captação PJ','Marque se quem captou foi um PJ ou o coordenador.',['Ativa o cálculo 10% captador + 10% rateio sócios'],function(){if(typeof switchTab==='function')switchTab('dados');});
+  add('#tab-prazos',           'd','📅','Aba Prazos','Prazos fatais e internos do processo.',['Fatal: limite legal — perda é falta grave','Interno: definido pelo coordenador','Peça pronta 48h antes do fatal'],function(){if(typeof switchTab==='function')switchTab('prazos');});
+  add('#tab-andamentos',       'd','📝','Aba Andamentos','Histórico de andamentos. Registre no mesmo dia.',['Data, tipo e descrição','Tipos: despacho, decisão, petição, audiência, recurso'],function(){if(typeof switchTab==='function')switchTab('andamentos');});
+  add('#tab-docs',             'd','📎','Aba Documentos','Relação de documentos. Botão Recibo gera comprovante.',['Registre cada documento recebido','Nunca receba documentos sem emitir recibo'],function(){if(typeof switchTab==='function')switchTab('docs');});
+  add('#tab-comunicacoes',     'd','💬','Aba Comunicações','Registro de contatos com o cliente. Obrigatório pelo POP.',['Data, meio, sócio responsável','Resumo e próximo passo informado'],function(){if(typeof switchTab==='function')switchTab('comunicacoes');});
+  add('#tab-checklist',        'd','✅','Aba Checklist POP','10 itens obrigatórios de abertura. Validado pelo coordenador.',['Marque cada item conforme concluído','Não inicie sem checklist completo'],function(){if(typeof switchTab==='function')switchTab('checklist');});
+
+  // ── FECHAMENTO ──
+  add('.nt:nth-child(3)',      'b','📊','Aba Fechamento','Distribuição de honorários por período.',['Régua: Fundo 30% | Captação 20% | Execução 20% | Rateio 30%','Imposto 17% deduzido automaticamente'],function(){if(typeof closeM==='function')closeM('m-proc');goPage('pg-fechamento');});
+  add('#chips-fech-cap',       'c','🎯','Filtro — Captador','Filtre o fechamento por captador.',['Múltipla seleção','Combine com filtro de executor'],function(){goPage('pg-fechamento');});
+  add('#chips-fech-exec',      'c','⚖️','Filtro — Executor','Filtre por executor para ver os casos de cada profissional.',['Deixe vazio para ver todos os casos'],function(){goPage('pg-fechamento');});
+
+  // ── REGRAS POP ──
+  if(isCoord||isPJ){
+    add(null,'c','🚨','Regras Inegociáveis','Estas situações resultam em rescisão imediata, sem exceções:',
+      ['NUNCA protocole peça sem assinatura de sócio ou coordenador','NUNCA perca prazo fatal — avise com 72h de antecedência','NUNCA receba valores de clientes diretamente','NUNCA atenda cliente novo sem sócio presente','Ausências: comunicar antes do início do expediente'],
+      function(){if(typeof closeM==='function')closeM('m-proc');}
+    );
+  }
+
+  // ── BACKUP ──
+  if(isAdmin||isFin){
+    add('.nt:nth-child(4)',    'b','🗄️','Backup Semanal','Exporte todos os dados para um arquivo seguro.',['Clique em Backup no menu ou na aba','Salve em local seguro ou nuvem','Faça toda semana sem falta'],function(){if(typeof closeM==='function')closeM('m-proc');goPage('pg-backup');});
+  }
+
+  // Conclusão
+  add('#btn-ajuda-tut','c','🎉','Tutorial Concluído!','Você conhece todas as funcionalidades. Este botão ❓ reabre o tutorial.',['Dúvidas → fale com o coordenador ou administrador','Bom trabalho!'],function(){if(typeof closeM==='function')closeM('m-proc');});
+
+  return pp;
+}
+
+// Motor
+function tutIniciar(){
+  var perfil=(window.SESSAO&&window.SESSAO.perfil)||'socio';
+  _tPassos=_tPassosPerfil(perfil);
+  _tIdx=0; _tAtivo=true;
+  document.getElementById('tut-overlay').classList.add('ativo');
+  document.getElementById('tut-btn-pular').classList.add('visivel');
+  document.getElementById('tut-step-badge').classList.add('visivel');
+  _tMostrar();
+}
+
+function _tMostrar(){
+  if(!_tAtivo||_tIdx>=_tPassos.length){tutEncerrar();return;}
+  var p=_tPassos[_tIdx];
+  if(p.fn){try{p.fn();}catch(e){}}
+  clearTimeout(_tTimer);
+  _tTimer=setTimeout(function(){_tRender(p);},420);
+}
+
+function _tRender(p){
+  var card=document.getElementById('tut-card');
+  var frame=document.getElementById('tut-frame');
+  if(!card||!frame)return;
+
+  // Conteúdo
+  var elEm=document.getElementById('tut-emoji');
+  var elTi=document.getElementById('tut-titulo');
+  var elTx=document.getElementById('tut-texto');
+  var elLi=document.getElementById('tut-lista');
+  var elCt=document.getElementById('tut-contador');
+  var elPf=document.getElementById('tut-progresso-fill');
+  var elBadge=document.getElementById('tut-step-badge');
+  var elDots=document.getElementById('tut-dots');
+  var btnAnt=document.getElementById('tut-btn-ant');
+  var btnPrx=document.getElementById('tut-btn-prox');
+  var total=_tPassos.length;
+
+  if(elEm)elEm.textContent=p.em;
+  if(elTi)elTi.textContent=p.ti;
+  if(elTx)elTx.textContent=p.tx;
+  if(elLi)elLi.innerHTML=(p.li||[]).map(function(l){return'<li>'+l+'</li>';}).join('');
+  if(elCt)elCt.textContent=(_tIdx+1)+' / '+total;
+  if(elBadge)elBadge.textContent='Passo '+(_tIdx+1)+' de '+total;
+  if(elPf)elPf.style.width=((_tIdx+1)/total*100)+'%';
+  if(btnAnt)btnAnt.disabled=_tIdx===0;
+  if(btnPrx)btnPrx.textContent=_tIdx===total-1?'✓ Concluir':'Próximo →';
+
+  // Dots (máx 8 visíveis)
+  if(elDots){
+    var maxD=Math.min(total,8);
+    elDots.innerHTML='';
+    for(var i=0;i<maxD;i++){
+      var d=document.createElement('div');
+      d.className='dot'+(i===_tIdx%maxD?' ativo':i<_tIdx%maxD?' passado':'');
+      elDots.appendChild(d);
+    }
+  }
+
+  // Posicionar
+  card.classList.remove('visivel');
+  frame.classList.remove('visivel');
+
+  if(p.sel){
+    var el=null;
+    try{el=document.querySelector(p.sel);}catch(e){}
+    if(el){
+      var r=el.getBoundingClientRect();
+      var pad=8;
+      // Frame
+      frame.style.left=(r.left-pad)+'px';
+      frame.style.top=(r.top-pad)+'px';
+      frame.style.width=(r.width+pad*2)+'px';
+      frame.style.height=(r.height+pad*2)+'px';
+
+      // Canvas mask
+      _tDesenharMask(r.left-pad,r.top-pad,r.width+pad*2,r.height+pad*2);
+
+      // Posicionar card
+      _tPosCard(card,r,p.dir);
+
+      el.scrollIntoView({behavior:'smooth',block:'nearest'});
+      setTimeout(function(){
+        frame.classList.add('visivel');
+        card.classList.add('visivel');
+      },80);
+      return;
+    }
+  }
+  // Centro
+  _tDesenharMask(0,0,0,0);
+  frame.style.display='none';
+  card.className='visivel seta-centro';
+  var bw=320,bh=280;
+  card.style.left=((window.innerWidth-bw)/2)+'px';
+  card.style.top=((window.innerHeight-bh)/2)+'px';
+}
+
+function _tDesenharMask(x,y,w,h){
+  var cv=document.getElementById('tut-mask-canvas');
+  if(!cv)return;
+  cv.width=window.innerWidth;
+  cv.height=window.innerHeight;
+  var ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.fillStyle='rgba(0,0,0,.6)';
+  ctx.fillRect(0,0,cv.width,cv.height);
+  if(w>0&&h>0){
+    ctx.clearRect(x,y,w,h);
+    // Borda dourada no canvas
+    ctx.strokeStyle='rgba(212,168,67,.6)';
+    ctx.lineWidth=2;
+    ctx.strokeRect(x,y,w,h);
+  }
+}
+
+function _tPosCard(card,r,dir){
+  var bw=320,pad=14;
+  var vw=window.innerWidth,vh=window.innerHeight;
+  var left,top,seta;
+
+  if(dir==='b'||dir==='baixo'){
+    // Acima do elemento
+    left=Math.max(10,Math.min(r.left,vw-bw-10));
+    top=r.top-280-pad;
+    seta='seta-baixo';
+    if(top<10){top=r.bottom+pad;seta='seta-cima';}
+  } else if(dir==='c'||dir==='cima'){
+    // Abaixo do elemento
+    left=Math.max(10,Math.min(r.left,vw-bw-10));
+    top=r.bottom+pad;
+    seta='seta-cima';
+    if(top+260>vh-10){top=r.top-280-pad;seta='seta-baixo';}
+  } else if(dir==='d'||dir==='dir'){
+    // À direita
+    left=r.right+pad;
+    top=Math.max(10,r.top-20);
+    seta='seta-esq';
+    if(left+bw>vw-10){left=r.left-bw-pad;seta='seta-dir';}
+  } else {
+    // À esquerda
+    left=r.left-bw-pad;
+    top=Math.max(10,r.top-20);
+    seta='seta-dir';
+    if(left<10){left=r.right+pad;seta='seta-esq';}
+  }
+
+  card.className='visivel '+seta;
+  card.style.left=Math.max(10,left)+'px';
+  card.style.top=Math.max(10,Math.min(top,vh-300))+'px';
+}
+
+function tutProx(){if(_tIdx<_tPassos.length-1){_tIdx++;_tMostrar();}else{tutEncerrar();}}
+function tutAnt(){if(_tIdx>0){_tIdx--;_tMostrar();}}
+function tutEncerrar(){
+  _tAtivo=false;
+  var cv=document.getElementById('tut-mask-canvas');
+  if(cv){var ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);}
+  document.getElementById('tut-overlay').classList.remove('ativo');
+  document.getElementById('tut-frame').classList.remove('visivel');
+  document.getElementById('tut-card').classList.remove('visivel');
+  document.getElementById('tut-btn-pular').classList.remove('visivel');
+  document.getElementById('tut-step-badge').classList.remove('visivel');
+  try{closeM('m-proc');}catch(e){}
+  try{var l=(window.SESSAO&&window.SESSAO.login)||'u';localStorage.setItem('mp_tut_ok_'+l,'1');}catch(e){}
+}
+
+function tutVerificarPrimeiroAcesso(){
+  try{
+    var l=(window.SESSAO&&window.SESSAO.login)||'u';
+    if(!localStorage.getItem('mp_tut_ok_'+l)){
+      setTimeout(tutIniciar,600);
+    }
+  }catch(e){}
+}
+
+
+
+
 
 
 
@@ -2501,131 +3035,419 @@ async function gerarContratoDocx(){
 
 
 
-// ═══ TUTORIAL DE PRIMEIRO ACESSO ════════════════════════════════
-var TUT_PASSOS = {
-  admin: [
-    {icon:'👋',titulo:'Bem-vindo ao Sistema!',texto:'Este é o sistema de gestão do Mauro Pires Advogados. Como administrador, você tem acesso completo a todas as funcionalidades.',lista:['Gerencie processos e honorários','Controle financeiro do escritório','Fechamento e distribuição de resultados','Configurações e backup']},
-    {icon:'🏢',titulo:'Aba Escritório',texto:'A aba Escritório é o painel financeiro do escritório. Aqui você acompanha o fluxo de caixa em tempo real.',lista:['KPIs de receitas, despesas e resultado','Alertas de vencimentos próximos','Lançar entradas (honorários, retainer)','Visualizar despesas por centro de custo']},
-    {icon:'⚖️',titulo:'Aba Processos',texto:'Gerencie todos os processos do escritório. Clique em qualquer processo para abrir o dossiê completo.',lista:['Dados do processo e partes','Prazos fatais e internos com alertas','Andamentos e comunicações com cliente','Checklist POP de abertura de caso']},
-    {icon:'💰',titulo:'Honorários e Distribuição',texto:'Lance honorários contratuais e de êxito. O sistema calcula automaticamente a distribuição conforme a régua.',lista:['Régua: Fundo 30% | Captação 20% | Execução 20% | Rateio 30%','Imposto de 17% deduzido automaticamente','Captação por PJ ou coordenador: 10%+10%','Fechamento por período com filtros']},
-    {icon:'📊',titulo:'Fechamento Mensal',texto:'Na aba Fechamento, visualize quanto cada sócio e PJ tem a receber no período selecionado.',lista:['Filtre por captador, executor ou período','Veja o detalhamento de cada caso','Exporte o relatório em planilha','Marque como pago para controle']},
-    {icon:'🗄️',titulo:'Backup e Segurança',texto:'Faça backup regularmente! O sistema salva os dados localmente — o backup garante que nada seja perdido.',lista:['Clique em Backup no menu superior','Salve o arquivo em local seguro','Importe o backup para restaurar dados','Recomendado: backup semanal']},
-    {icon:'🎉',titulo:'Tudo Pronto!',texto:'Você está pronto para usar o sistema. Qualquer dúvida, clique no botão ❓ no canto inferior direito para rever este tutorial.',lista:['Navegue pelas abas no menu superior','Use os filtros para encontrar informações','Os dados são salvos automaticamente','Bom trabalho!']}
-  ],
-  socio: [
-    {icon:'👋',titulo:'Bem-vindo, Dr(a)!',texto:'Este é o seu painel de gestão. Como sócio, você tem acesso aos processos, honorários e fechamento de resultados.',lista:['Acompanhe seus processos','Veja sua distribuição de honorários','Registre comunicações com clientes','Acesse o fechamento mensal']},
-    {icon:'⚖️',titulo:'Seus Processos',texto:'Na aba Processos, visualize e gerencie todos os casos em que você é sócio responsável, captador ou executor.',lista:['Clique no processo para abrir o dossiê','Veja prazos e andamentos','Registre comunicações com o cliente','Acompanhe o checklist POP']},
-    {icon:'💬',titulo:'Comunicação com Clientes',texto:'Toda comunicação com o cliente deve ser registrada no sistema e feita pelo sócio responsável.',lista:['Abra o processo → aba Comunicações','Registre data, meio e resumo','Informe o próximo passo ao cliente','O coordenador também acompanha']},
-    {icon:'💰',titulo:'Seus Honorários',texto:'Na aba Fechamento, veja sua remuneração do período: rateio, captação e execução de cada caso.',lista:['Selecione o período desejado','Use os chips para filtrar seus casos','Veja o total a receber','Exporte o relatório se necessário']},
-    {icon:'🎉',titulo:'Pronto!',texto:'Clique no ❓ no canto da tela para rever este tutorial a qualquer momento.',lista:['Prazos ficam visíveis na aba Processos','Alertas de vencimento aparecem no Escritório','Boa atuação!']}
-  ],
-  coordenador: [
-    {icon:'👋',titulo:'Bem-vindo, Coordenador!',texto:'Você é o guardião do POP. Sua função é garantir que todos os procedimentos sejam seguidos pela equipe PJ.',lista:['Supervisione os processos da equipe PJ','Controle prazos e qualidade','Valide o checklist de abertura de cada caso','Reporte aos sócios']},
-    {icon:'⚖️',titulo:'Gerenciando Processos',texto:'Na aba Processos você vê todos os casos. Clique em qualquer um para acessar o dossiê completo.',lista:['Verifique o checklist POP de cada caso','Acompanhe os andamentos dos PJs','Controle os prazos fatais diariamente','Registre observações nos andamentos']},
-    {icon:'✅',titulo:'Checklist POP',texto:'Todo processo novo deve ter o checklist POP preenchido e validado por você antes de iniciar.',lista:['Abra o processo → aba Checklist','Marque cada item conforme concluído','Valide com seu nome e data','Reporte ao sócio caso algum item falte']},
-    {icon:'📅',titulo:'Controle de Prazos',texto:'Verifique os prazos todos os dias às 7h30, antes de qualquer outra atividade.',lista:['Na aba Processos, filtre por prazo','Alertas aparecem no painel Escritório','Comunique a equipe sobre prazos da semana','Nunca deixe um prazo fatal sem cobertura']},
-    {icon:'💬',titulo:'Comunicações',texto:'Registre toda comunicação relevante nos processos. O histórico fica disponível para os sócios.',lista:['Abra o processo → aba Comunicações','Informe data, meio e sócio que comunicou','Registre o próximo passo informado','Mantenha o histórico sempre atualizado']},
-    {icon:'🎉',titulo:'Tudo Pronto!',texto:'Clique no ❓ a qualquer momento para rever este tutorial.',lista:['Você é responsável pela execução do POP','Reporte desvios imediatamente','Bom trabalho!']}
-  ],
-  pj: [
-    {icon:'👋',titulo:'Bem-vindo à Equipe!',texto:'Como advogado contratado (PJ), você é responsável pela execução processual sob supervisão do coordenador.',lista:['Execute os processos designados','Siga o POP em todas as etapas','Registre andamentos no mesmo dia','Nunca protocole sem assinatura conjunta']},
-    {icon:'⚖️',titulo:'Seus Processos',texto:'Na aba Processos você vê os casos sob sua responsabilidade. Mantenha tudo atualizado.',lista:['Registre andamentos no mesmo dia','Cadastre prazos imediatamente ao tomar ciência','Submeta peças ao coordenador 48h antes do prazo','Atualize documentos e comunicações']},
-    {icon:'📋',titulo:'Atendimento de Cliente Novo',texto:'Todo cliente novo é atendido com um sócio presente. Você toma notas e cuida do cadastro.',lista:['Tome notas completas na reunião','Emita o recibo de documentos no ato','Cadastre no sistema financeiro e processual','Envie o contrato para assinatura em 24h']},
-    {icon:'✅',titulo:'Checklist POP',texto:'Cada caso novo tem um checklist de 10 itens que deve ser concluído antes de iniciar o trabalho.',lista:['Abra o processo → aba Checklist','Complete cada etapa na ordem','Coordenador valida e assina','Só inicie o trabalho após validação']},
-    {icon:'⚠️',titulo:'Regras Inegociáveis',texto:'Estas situações resultam em rescisão imediata do contrato, sem exceções.',lista:['NUNCA protocole peça sem assinatura de um sócio ou do coordenador','NUNCA perca um prazo fatal por negligência','NUNCA receba valores de clientes diretamente','Ausências devem ser comunicadas antes do expediente']},
-    {icon:'💰',titulo:'Sua Remuneração',texto:'Você recebe honorário fixo mensal + 3% de êxito rateado entre os 3 PJs.',lista:['Fixo: R$ 4.000 a R$ 6.500 — liberado após emissão de NF','Variável: 3% sobre êxito líquido ÷ 3 PJs','Teto do variável: R$ 30.000/mês','Emita a NF até o 5º dia útil do mês']},
-    {icon:'🎉',titulo:'Tudo Pronto!',texto:'Clique no ❓ para rever este tutorial quando quiser. Boa atuação!',lista:['Dúvidas → fale com o coordenador','Prazos → sempre avise com antecedência','Bom trabalho!']}
-  ],
-  financeiro: [
-    {icon:'👋',titulo:'Bem-vindo, Gestor!',texto:'Você é responsável pelo controle financeiro do escritório. Aqui você gerencia entradas, despesas e recebimentos.',lista:['Lance e controle entradas','Gerencie despesas por centro de custo','Acompanhe vencimentos e inadimplências','Gere backups regulares']},
-    {icon:'🏢',titulo:'Painel Escritório',texto:'A aba Escritório é seu painel principal. Aqui você tem visão completa do fluxo financeiro.',lista:['KPIs de receitas, despesas e resultado','Alertas de vencimento nos próximos 7 dias','Lançar novas entradas e despesas','Tabelas com status de cada lançamento']},
-    {icon:'💰',titulo:'Lançar Entradas',texto:'Clique em "+ Entrada" para registrar honorários recebidos, retainers e outras receitas.',lista:['Informe tipo, cliente, valor e vencimento','Registre o número da NF quando houver','Coloque dados PIX para envio ao cliente','Atualize o status conforme recebimento']},
-    {icon:'💸',titulo:'Controle de Despesas',texto:'Registre todas as despesas do escritório por centro de custo para um controle preciso.',lista:['8 centros de custo disponíveis','Vincule ao responsável e ao processo','Acompanhe vencimentos e status de pagamento','Dados usados no fechamento mensal']},
-    {icon:'🗄️',titulo:'Backup Semanal',texto:'Faça backup toda semana! Os dados ficam salvos localmente — o backup é sua proteção.',lista:['Clique em Backup no menu superior','Salve o arquivo em pasta segura ou nuvem','Importe o backup para restaurar dados','Não deixe passar mais de 7 dias sem backup']},
-    {icon:'🎉',titulo:'Pronto!',texto:'Clique no ❓ para rever este tutorial a qualquer momento.',lista:['Acompanhe os alertas diariamente','Mantenha os status sempre atualizados','Bom trabalho!']}
-  ]
-};
 
-var tutStep = 0;
+
+
+// ═══ TUTORIAL GUIADO INTERATIVO ═════════════════════════════════
+var tutAtivo = false;
+var tutPassoAtual = 0;
 var tutPassos = [];
+var tutTimer = null;
 
-function abrirTutorial() {
-  var overlay=document.getElementById('tut-overlay');
-  if(!overlay) return;
+// Definição dos passos por perfil
+// Cada passo: { sel, arrow, icon, titulo, texto, lista, acao }
+// sel = seletor CSS do elemento a destacar (null = centro da tela)
+// acao = função executada ANTES de mostrar o balão (ex: abrir aba)
+
+function getTutPassos(perfil) {
+  var admin = perfil === 'admin';
+  var socio = perfil === 'socio' || admin;
+  var coord = perfil === 'coordenador' || admin;
+  var pj    = perfil === 'pj' || admin;
+  var fin   = perfil === 'financeiro' || admin;
+
+  var passos = [];
+
+  // ── BOAS-VINDAS ──────────────────────────────────────────────
+  passos.push({sel:null, arrow:'top', icon:'👋', titulo:'Bem-vindo ao Sistema!',
+    texto:'Este tutorial vai te guiar por todas as funcionalidades. Use os botões Próximo e Anterior para navegar.',
+    lista:['Clique em Próximo para começar','Clique em Pular tutorial para sair','O botão ❓ reabre o tutorial quando quiser'],
+    acao: function(){ goPage('pg-escritorio'); }
+  });
+
+  // ── ABA ESCRITÓRIO ────────────────────────────────────────────
+  if(fin || socio) {
+    passos.push({sel:'.nt:nth-child(1)', arrow:'bottom', icon:'🏢', titulo:'Aba Escritório',
+      texto:'Painel financeiro do escritório. Tudo sobre receitas, despesas e vencimentos.',
+      lista:['Dashboard com KPIs em tempo real','Alertas de vencimentos nos próximos 7 dias','Lançar entradas e despesas'],
+      acao: function(){ goPage('pg-escritorio'); }
+    });
+    passos.push({sel:'#kpi-rec', arrow:'bottom', icon:'💰', titulo:'KPI — Receitas do Mês',
+      texto:'Total de entradas recebidas no período selecionado (honorários, retainer, etc).',
+      lista:['Atualizado automaticamente ao lançar entradas','Filtre pelo campo Período acima'],
+      acao: function(){ goPage('pg-escritorio'); }
+    });
+    passos.push({sel:'#kpi-desp', arrow:'bottom', icon:'💸', titulo:'KPI — Despesas do Mês',
+      texto:'Total de despesas lançadas no período. Inclui todos os centros de custo.',
+      lista:['Clique no card para ver detalhes','Compare com as receitas no card Resultado'],
+      acao: function(){ goPage('pg-escritorio'); }
+    });
+    passos.push({sel:'#kpi-res', arrow:'bottom', icon:'📈', titulo:'KPI — Resultado',
+      texto:'Diferença entre receitas e despesas. Verde = superávit. Vermelho = déficit.',
+      lista:['Acompanhe mensalmente','Base para decisões de gestão'],
+      acao: function(){ goPage('pg-escritorio'); }
+    });
+    passos.push({sel:'#kpi-alert', arrow:'bottom', icon:'⚠️', titulo:'KPI — Alertas',
+      texto:'Número de vencimentos (entradas a receber ou despesas a pagar) nos próximos 7 dias.',
+      lista:['Clique para rolar até o painel de alertas','Resolva os alertas antes que virem inadimplência'],
+      acao: function(){ goPage('pg-escritorio'); }
+    });
+    passos.push({sel:'#esc-comp', arrow:'bottom', icon:'📅', titulo:'Filtro de Período',
+      texto:'Selecione o mês/ano para filtrar todas as informações do painel.',
+      lista:['Padrão: mês atual','Altere para ver histórico'],
+      acao: function(){ goPage('pg-escritorio'); }
+    });
+    passos.push({sel:'.card:has(#tbody-entradas)', arrow:'top', icon:'💰', titulo:'Tabela de Entradas',
+      texto:'Lista todas as entradas do período. Clique no ícone de edição para alterar ou no ✕ para excluir.',
+      lista:['+ Entrada: abre o formulário de nova entrada','Tipos: Honorário, Retainer, Sucumbência, Consultoria','Controle NF, PIX e status de cada entrada'],
+      acao: function(){ goPage('pg-escritorio'); }
+    });
+    passos.push({sel:'.btn-gold', arrow:'bottom', icon:'➕', titulo:'Botão + Entrada',
+      texto:'Clique aqui para lançar uma nova entrada financeira no escritório.',
+      lista:['Informe tipo, cliente, valor e vencimento','Registre o número da NF se houver','Coloque a chave PIX para enviar ao cliente','Defina o status: Pendente, Recebido ou Atrasado'],
+      acao: function(){ goPage('pg-escritorio'); }
+    });
+  }
+
+  // ── ABA HONORÁRIOS ────────────────────────────────────────────
+  if(socio || fin) {
+    passos.push({sel:'.nt:nth-child(1)', arrow:'bottom', icon:'⚖️', titulo:'Aba Honorários',
+      texto:'Aqui você lança os casos e acompanha a distribuição dos honorários.',
+      lista:['Sub-aba Lançar Caso: novo caso','Sub-aba Casos: lista e histórico'],
+      acao: function(){ goPage('pg-honorarios'); }
+    });
+    passos.push({sel:'#snt-lanc', arrow:'bottom', icon:'📋', titulo:'Sub-aba: Lançar Caso',
+      texto:'Formulário para registrar um novo caso com todos os dados financeiros.',
+      lista:['Informe cliente, área e valores','Selecione captador e executor','O sistema calcula a distribuição automaticamente'],
+      acao: function(){ goPage('pg-honorarios'); if(typeof goSubHon==='function') goSubHon('lanc'); }
+    });
+    passos.push({sel:'#cc', arrow:'top', icon:'🎯', titulo:'Chips — Captador',
+      texto:'Selecione quem captou o caso. Apenas UM captador por caso.',
+      lista:['Clique no nome para selecionar','Clique novamente para desmarcar','Se PJ ou coordenador captou, marque o checkbox abaixo'],
+      acao: function(){ goPage('pg-honorarios'); if(typeof goSubHon==='function') goSubHon('lanc'); }
+    });
+    passos.push({sel:'#ce', arrow:'top', icon:'⚖️', titulo:'Chips — Executor',
+      texto:'Selecione quem executou o caso. Pode ser mais de um profissional.',
+      lista:['Múltipla seleção permitida','Sócios e PJs podem ser executores','A % de execução é dividida entre os selecionados'],
+      acao: function(){ goPage('pg-honorarios'); if(typeof goSubHon==='function') goSubHon('lanc'); }
+    });
+    passos.push({sel:'#snt-casos', arrow:'bottom', icon:'📁', titulo:'Sub-aba: Casos',
+      texto:'Lista todos os casos lançados com resumo da distribuição.',
+      lista:['Filtre por período, captador ou executor','Veja o status de cada caso','Clique para editar ou excluir'],
+      acao: function(){ goPage('pg-honorarios'); if(typeof goSubHon==='function') goSubHon('casos'); }
+    });
+  }
+
+  // ── ABA PROCESSOS ─────────────────────────────────────────────
+  passos.push({sel:'.nt:nth-child(2)', arrow:'bottom', icon:'⚖️', titulo:'Aba Processos',
+    texto:'Central de gestão processual. Todos os processos do escritório em um só lugar.',
+    lista:['Busque por número, cliente ou área','Clique em qualquer processo para abrir o dossiê','Botão + Processo para cadastrar novo'],
+    acao: function(){ goPage('pg-processos'); }
+  });
+
+  if(coord || pj) {
+    passos.push({sel:'.btn-gold', arrow:'bottom', icon:'➕', titulo:'Botão + Processo',
+      texto:'Abre o formulário de cadastro de novo processo. Siga o POP — seção 2.',
+      lista:['Todo processo novo precisa de um sócio presente no atendimento','O PJ toma notas e cadastra','Valor dos honorários definido pelo sócio'],
+      acao: function(){ goPage('pg-processos'); }
+    });
+  }
+
+  // Modal de processo — abre para mostrar as abas
+  passos.push({sel:'#m-proc .itabs', arrow:'bottom', icon:'📂', titulo:'Abas do Processo',
+    texto:'Cada processo tem 6 abas com informações completas do caso.',
+    lista:['Dados: partes, área, captador, executor','Prazos: fatais e internos','Andamentos: histórico processual','Documentos: arquivos e recibo','Comunicações: contatos com o cliente','Checklist: POP de abertura'],
+    acao: function(){
+      goPage('pg-processos');
+      if(typeof abrirModalProc==='function') abrirModalProc(null);
+    }
+  });
+
+  passos.push({sel:'#tab-dados', arrow:'right', icon:'📋', titulo:'Aba Dados do Processo',
+    texto:'Informações principais do processo: partes, vara, área, captador e executor.',
+    lista:['Número do processo no formato CNJ','Captador: seleção única','Executor: seleção múltipla','Marque se foi captado por PJ ou coordenador'],
+    acao: function(){
+      goPage('pg-processos');
+      if(typeof abrirModalProc==='function') abrirModalProc(null);
+      if(typeof switchTab==='function') switchTab('dados');
+    }
+  });
+
+  passos.push({sel:'#chips-captou', arrow:'top', icon:'🎯', titulo:'Chips — Captador (Processo)',
+    texto:'Selecione quem captou este processo. Seleção única.',
+    lista:['5 sócios + coordenador + 3 PJs disponíveis','Se PJ ou coord captou, marque o checkbox abaixo','Captação por PJ/coord = 10% captador + 10% sócios'],
+    acao: function(){
+      if(typeof switchTab==='function') switchTab('dados');
+    }
+  });
+
+  passos.push({sel:'#chips-exec-soc', arrow:'top', icon:'⚖️', titulo:'Chips — Executor Sócios',
+    texto:'Selecione os sócios que executam este processo. Múltipla seleção.',
+    lista:['Um ou mais sócios podem ser executores','A % de execução é dividida entre os selecionados','Combinável com PJs executores abaixo'],
+    acao: function(){
+      if(typeof switchTab==='function') switchTab('dados');
+    }
+  });
+
+  passos.push({sel:'#tab-prazos', arrow:'right', icon:'📅', titulo:'Aba Prazos',
+    texto:'Controle de todos os prazos do processo. Fatal e interno.',
+    lista:['Prazo fatal: limite legal — perda é falta grave','Prazo interno: definido pelo coordenador','Alertas automáticos em 10, 5 e 2 dias','Peça deve estar pronta 48h antes do fatal'],
+    acao: function(){
+      if(typeof switchTab==='function') switchTab('prazos');
+    }
+  });
+
+  passos.push({sel:'#tab-andamentos', arrow:'right', icon:'📝', titulo:'Aba Andamentos',
+    texto:'Histórico de todos os andamentos processuais. Registre no mesmo dia do andamento.',
+    lista:['Data, tipo e descrição do andamento','Tipos: despacho, decisão, petição, audiência, recurso','Registre imediatamente — nunca deixe para depois'],
+    acao: function(){
+      if(typeof switchTab==='function') switchTab('andamentos');
+    }
+  });
+
+  passos.push({sel:'#tab-docs', arrow:'right', icon:'📎', titulo:'Aba Documentos',
+    texto:'Relação de documentos do processo. O botão Recibo gera um comprovante para o cliente.',
+    lista:['Registre cada documento recebido','Botão Recibo: gera TXT com lista para assinar','Nunca receba documentos sem emitir recibo'],
+    acao: function(){
+      if(typeof switchTab==='function') switchTab('docs');
+    }
+  });
+
+  passos.push({sel:'#tab-comunicacoes', arrow:'right', icon:'💬', titulo:'Aba Comunicações',
+    texto:'Registro de todas as comunicações com o cliente. Obrigatório pelo POP.',
+    lista:['Data, meio (WhatsApp/e-mail/ligação/reunião)','Sócio responsável pela comunicação','Resumo e próximo passo informado ao cliente','Comunicação com cliente = responsabilidade do sócio'],
+    acao: function(){
+      if(typeof switchTab==='function') switchTab('comunicacoes');
+    }
+  });
+
+  passos.push({sel:'#tab-checklist', arrow:'right', icon:'✅', titulo:'Aba Checklist POP',
+    texto:'10 itens obrigatórios de abertura de caso. Validado pelo coordenador.',
+    lista:['Marque cada item conforme concluído','Barra de progresso mostra % de conclusão','Coordenador valida com nome e data','Não inicie o trabalho sem checklist completo'],
+    acao: function(){
+      if(typeof switchTab==='function') switchTab('checklist');
+    }
+  });
+
+  // Fechar modal e mostrar fechamento
+  passos.push({sel:'.nt:nth-child(3)', arrow:'bottom', icon:'📊', titulo:'Aba Fechamento',
+    texto:'Distribuição de honorários por período. Veja quanto cada sócio e PJ tem a receber.',
+    lista:['Filtre por captador, executor ou período','Régua: Fundo 30% | Captação 20% | Execução 20% | Rateio 30%','Imposto de 17% deduzido automaticamente','Exporte o relatório em planilha'],
+    acao: function(){
+      if(typeof closeM==='function') closeM('m-proc');
+      goPage('pg-fechamento');
+    }
+  });
+
+  passos.push({sel:'#chips-fech-cap', arrow:'top', icon:'🎯', titulo:'Filtros do Fechamento',
+    texto:'Use os chips para filtrar o fechamento por captador, executor ou período.',
+    lista:['Selecione um ou mais para filtrar','Deixe todos desmarcados para ver tudo','Combinável com o filtro de período'],
+    acao: function(){ goPage('pg-fechamento'); }
+  });
+
+  // ── ABA DESPESAS ──────────────────────────────────────────────
+  if(fin) {
+    passos.push({sel:'.nt', arrow:'bottom', icon:'💸', titulo:'Aba Despesas',
+      texto:'Registre as despesas operacionais do escritório por centro de custo.',
+      lista:['8 centros: Pessoal, Estrutura, Tributário, Processual, Êxito, Tecnologia, Marketing, Outros','Vincule ao responsável e ao processo/cliente','Controle de status: Pendente ou Pago'],
+      acao: function(){ goPage('pg-despesas'); }
+    });
+    passos.push({sel:'#d-cat', arrow:'top', icon:'📂', titulo:'Centro de Custo',
+      texto:'Classifique cada despesa no centro de custo correto para relatórios precisos.',
+      lista:['Pessoal: salários, pró-labore, encargos','Estrutura: aluguel, energia, internet','Tributário: ISS, IRPJ, anuidade OAB','Processual: custas, diligências, correios'],
+      acao: function(){ goPage('pg-despesas'); }
+    });
+  }
+
+  // ── BACKUP ────────────────────────────────────────────────────
+  if(admin || fin) {
+    passos.push({sel:'.nt:last-child', arrow:'bottom', icon:'🗄️', titulo:'Aba Backup',
+      texto:'Salve e restaure todos os dados do sistema. Faça backup toda semana.',
+      lista:['Clique em ↓ Backup no menu ou no botão na aba','Salve o arquivo em local seguro ou nuvem','Importe para restaurar dados','Backup unificado: financeiro + processual'],
+      acao: function(){ goPage('pg-backup'); }
+    });
+  }
+
+  // ── REGRAS DO POP ─────────────────────────────────────────────
+  if(coord || pj) {
+    passos.push({sel:null, arrow:'top', icon:'🚨', titulo:'Regras Inegociáveis do POP',
+      texto:'Estas situações resultam em rescisão imediata, sem exceções:',
+      lista:[
+        'NUNCA protocole peça sem assinatura de um sócio ou coordenador',
+        'NUNCA perca um prazo fatal — comunique o risco com 72h de antecedência',
+        'NUNCA receba valores de clientes diretamente',
+        'NUNCA atenda cliente novo sem sócio presente',
+        'Ausências devem ser comunicadas antes do início do expediente'
+      ],
+      acao: function(){ if(typeof closeM==='function') closeM('m-proc'); }
+    });
+  }
+
+  // ── CONCLUSÃO ─────────────────────────────────────────────────
+  passos.push({sel:'#btn-tut-ajuda', arrow:'top', icon:'🎉', titulo:'Tutorial Concluído!',
+    texto:'Você conhece todas as funcionalidades do sistema. Este botão ❓ reabre o tutorial quando precisar.',
+    lista:['Dúvidas → fale com o coordenador ou administrador','Erros → registre e comunique imediatamente','Bom trabalho!'],
+    acao: function(){ if(typeof closeM==='function') closeM('m-proc'); }
+  });
+
+  return passos;
+}
+
+// ── Motor do tutorial ─────────────────────────────────────────
+function iniciarTutorial() {
   var perfil = (window.SESSAO && window.SESSAO.perfil) || 'socio';
-  tutPassos = TUT_PASSOS[perfil] || TUT_PASSOS.socio;
-  tutStep = 0;
-  renderTutStep();
-  overlay.classList.add('show');
+  tutPassos = getTutPassos(perfil);
+  tutPassoAtual = 0;
+  tutAtivo = true;
+  mostrarPasso();
 }
 
-function fecharTutorial() {
-  var ov=document.getElementById('tut-overlay');
-  if(ov) ov.classList.remove('show');
-  try { localStorage.setItem('mp_tut_'+((window.SESSAO&&window.SESSAO.login)||'user'), '1'); } catch(e){}
+function mostrarPasso() {
+  if(!tutAtivo || tutPassoAtual >= tutPassos.length) {
+    encerrarTutorial();
+    return;
+  }
+  var passo = tutPassos[tutPassoAtual];
+
+  // Executar ação do passo
+  if(passo.acao) {
+    try { passo.acao(); } catch(e) {}
+  }
+
+  setTimeout(function() {
+    renderBalloon(passo);
+  }, 450);
 }
 
-function renderTutStep() {
-  var passo = tutPassos[tutStep];
+function renderBalloon(passo) {
   var total = tutPassos.length;
-  if(!passo) return;
-  var elIcon=document.getElementById('tut-icon');
-  if(!elIcon) return;
-  elIcon.textContent = passo.icon;
-  var elTit=document.getElementById('tut-titulo');if(elTit)elTit.textContent=passo.titulo;
-  var elTxt=document.getElementById('tut-texto');if(elTxt)elTxt.textContent=passo.texto;
+  var bd = document.getElementById('tut-backdrop');
+  var hl = document.getElementById('tut-highlight');
+  var bl = document.getElementById('tut-balloon');
+  if(!bd||!hl||!bl) return;
 
-  var ul = document.getElementById('tut-lista');
-  ul.innerHTML = (passo.lista||[]).map(function(l){return '<li>'+l+'</li>';}).join('');
+  // Atualizar conteúdo
+  var ic = document.getElementById('tut-icon-b');
+  var ti = document.getElementById('tut-titulo-b');
+  var tx = document.getElementById('tut-texto-b');
+  var li = document.getElementById('tut-lista-b');
+  var ct = document.getElementById('tut-counter-b');
+  var pb = document.getElementById('tut-progbar-fill');
+  var btnAnt = document.getElementById('tut-btn-anterior');
+  var btnPrx = document.getElementById('tut-btn-proximo');
 
-  // Progress bar
-  document.getElementById('tut-progress-bar').style.width = ((tutStep+1)/total*100)+'%';
+  if(ic) ic.textContent = passo.icon;
+  if(ti) ti.textContent = passo.titulo;
+  if(tx) tx.textContent = passo.texto;
+  if(li) li.innerHTML = (passo.lista||[]).map(function(l){return '<li>'+l+'</li>';}).join('');
+  if(ct) ct.textContent = (tutPassoAtual+1)+' de '+total;
+  if(pb) pb.style.width = ((tutPassoAtual+1)/total*100)+'%';
+  if(btnAnt) btnAnt.disabled = tutPassoAtual === 0;
+  if(btnPrx) btnPrx.textContent = tutPassoAtual === total-1 ? '✓ Concluir' : 'Próximo →';
 
-  // Dots
-  var dots = document.getElementById('tut-dots');
-  dots.innerHTML = tutPassos.map(function(_,i){
-    return '<div class="tut-dot'+(i===tutStep?' active':'')+'"></div>';
-  }).join('');
+  // Posicionar destaque e balão
+  bd.classList.add('show');
 
-  // Contador
-  document.getElementById('tut-steps').textContent = (tutStep+1)+' de '+total;
+  if(passo.sel) {
+    var el = document.querySelector(passo.sel);
+    if(el) {
+      var rect = el.getBoundingClientRect();
+      var pad = 6;
+      hl.style.display = 'block';
+      hl.style.left   = (rect.left - pad)+'px';
+      hl.style.top    = (rect.top - pad)+'px';
+      hl.style.width  = (rect.width + pad*2)+'px';
+      hl.style.height = (rect.height + pad*2)+'px';
 
-  // Botões
-  document.getElementById('tut-btn-prev').disabled = tutStep === 0;
-  var btnNext = document.getElementById('tut-btn-next');
-  btnNext.textContent = tutStep === total-1 ? '✓ Concluir' : 'Próximo →';
-}
+      // Posicionar balão
+      bl.className = 'show';
+      var arrow = passo.arrow || 'bottom';
+      bl.classList.add('arrow-'+arrow);
+      var bw = 300, bh = 220;
+      var bLeft, bTop;
+      if(arrow === 'bottom') {
+        bLeft = Math.max(10, Math.min(rect.left, window.innerWidth - bw - 10));
+        bTop  = rect.top - bh - 16;
+        if(bTop < 10) { bTop = rect.bottom + 16; bl.className='show arrow-top'; }
+      } else if(arrow === 'top') {
+        bLeft = Math.max(10, Math.min(rect.left, window.innerWidth - bw - 10));
+        bTop  = rect.bottom + 16;
+        if(bTop + bh > window.innerHeight - 10) { bTop = rect.top - bh - 16; bl.className='show arrow-bottom'; }
+      } else if(arrow === 'right') {
+        bLeft = rect.right + 16;
+        bTop  = Math.max(10, rect.top - 20);
+        if(bLeft + bw > window.innerWidth - 10) { bLeft = rect.left - bw - 16; bl.className='show arrow-left'; }
+      } else {
+        bLeft = rect.left - bw - 16;
+        bTop  = Math.max(10, rect.top - 20);
+      }
+      bl.style.left = bLeft+'px';
+      bl.style.top  = bTop+'px';
 
-function tutNext() {
-  if(tutStep < tutPassos.length-1) {
-    tutStep++;
-    renderTutStep();
+      // Scroll para o elemento
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+    } else {
+      // Elemento não encontrado — centralizar
+      posicionarCentro(hl, bl);
+    }
   } else {
-    fecharTutorial();
+    posicionarCentro(hl, bl);
   }
 }
 
-function tutPrev() {
-  if(tutStep > 0) {
-    tutStep--;
-    renderTutStep();
+function posicionarCentro(hl, bl) {
+  hl.style.display = 'none';
+  bl.className = 'show';
+  var bw = 300;
+  bl.style.left = ((window.innerWidth - bw) / 2)+'px';
+  bl.style.top  = ((window.innerHeight - 260) / 2)+'px';
+}
+
+function tutProximo() {
+  tutPassoAtual++;
+  mostrarPasso();
+}
+
+function tutAnterior() {
+  if(tutPassoAtual > 0) {
+    tutPassoAtual--;
+    mostrarPasso();
   }
 }
 
-// Verificar primeiro acesso
-function verificarPrimeiroAcesso() {
-  var login = (window.SESSAO && window.SESSAO.login) || 'user';
+function tutPular() {
+  encerrarTutorial();
+}
+
+function encerrarTutorial() {
+  tutAtivo = false;
+  var bd = document.getElementById('tut-backdrop');
+  var hl = document.getElementById('tut-highlight');
+  var bl = document.getElementById('tut-balloon');
+  if(bd) bd.classList.remove('show');
+  if(hl) { hl.style.display='none'; }
+  if(bl) bl.classList.remove('show');
   try {
-    var visto = localStorage.getItem('mp_tut_'+login);
+    var login = (window.SESSAO && window.SESSAO.login) || 'user';
+    localStorage.setItem('mp_tut_visto_'+login, '1');
+  } catch(e) {}
+  // Fechar modal de processo se estiver aberto
+  try { closeM('m-proc'); } catch(e) {}
+}
+
+function verificarPrimeiroAcessoGuiado() {
+  try {
+    var login = (window.SESSAO && window.SESSAO.login) || 'user';
+    var visto = localStorage.getItem('mp_tut_visto_'+login);
     if(!visto) {
-      setTimeout(function(){ abrirTutorial(); }, 800);
+      setTimeout(function(){ iniciarTutorial(); }, 500);
     }
   } catch(e) {}
 }
 
 window.onload=function(){
   var _u=window.SESSAO;if(_u){var _nb=document.getElementById('ub-nome');if(_nb)_nb.textContent='👤 '+_u.nome;}
-  verificarPrimeiroAcesso();
+  tutVerificarPrimeiroAcesso();
   verificarAlertasProc();
   if($('esc-comp')) $('esc-comp').value=hoje().substring(0,7);
   // Preencher banner do usuário logado
@@ -3553,6 +4375,9 @@ window.onload=function(){
   atualizarProxFila();
   setInterval(verificarAlertas,300000);
 };
+
+
+
 
 
 
